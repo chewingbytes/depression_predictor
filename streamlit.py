@@ -37,7 +37,7 @@ def user_input_features():
     }
 
     # Create input_features as a flat list of all the input values
-    input_features = [
+    input_features = (
         age, 
         academic_pressure, 
         cgpa, 
@@ -48,9 +48,8 @@ def user_input_features():
         dietary_habits_unhealthy, 
         suicidal_thoughts_no, 
         suicidal_thoughts_yes
-    ]
+    )
     
-    features = pd.DataFrame(data, index=[0])
     
     return data, input_features
 
