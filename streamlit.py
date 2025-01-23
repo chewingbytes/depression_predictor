@@ -1,10 +1,11 @@
 import streamlit as st
 import pandas as pd
-from sklearn.ensemble import GradientBoostingRegressor
+import joblib
+
+model = joblib.load("trained_model.pk1")
 
 st.write("""
-# Mental Health Prediction App
-This app predicts the mental health status based on user input!
+Are you depressed?
 """)
 
 st.sidebar.header('User Input Parameters')
@@ -21,6 +22,7 @@ def user_input_features():
     suicidal_thoughts_no = st.sidebar.selectbox('Have you ever had suicidal thoughts? - No', [0, 1], index=1)
     suicidal_thoughts_yes = st.sidebar.selectbox('Have you ever had suicidal thoughts? - Yes', [0, 1], index=0)
     
+    # Create the data dictionary for display purposes
     data = {
         'Age': age,
         'Academic Pressure': academic_pressure,
@@ -33,51 +35,32 @@ def user_input_features():
         'Have you ever had suicidal thoughts ?_No': suicidal_thoughts_no,
         'Have you ever had suicidal thoughts ?_Yes': suicidal_thoughts_yes
     }
+
+    # Create input_features as a flat list of all the input values
+    input_features = [
+        age, 
+        academic_pressure, 
+        cgpa, 
+        study_satisfaction, 
+        work_study_hours, 
+        financial_stress, 
+        dietary_habits_healthy, 
+        dietary_habits_unhealthy, 
+        suicidal_thoughts_no, 
+        suicidal_thoughts_yes
+    ]
+    
     features = pd.DataFrame(data, index=[0])
-    return features
+    
+    return data, input_features
 
-df = user_input_features()
+# Get user input data and features
+data, input_features = user_input_features()
 
-st.subheader('User Input parameters')
-st.write(df)
+st.subheader('User Input Parameters')
+st.write(pd.DataFrame([data]))
 
-# Assuming you have a trained RandomForest model with the right columns
-# (You would train your model on the data similar to the input features here)
-# For example purposes, we'll use random data for this part:
-
-GBR = GradientBoostingRegressor(
-    n_estimators=3000, 
-    min_samples_leaf=5, 
-    max_features=0.3, 
-    max_depth=4, 
-    loss='huber', 
-    learning_rate=0.01
-)
-
-# Mock training with dummy data (replace this with actual model training)
-X_dummy = pd.DataFrame({
-    'Age': [20, 22, 24, 26],
-    'Academic Pressure': [5.0, 4.0, 6.0, 7.0],
-    'CGPA': [3.5, 3.8, 3.0, 3.9],
-    'Study Satisfaction': [7.0, 6.0, 8.0, 5.0],
-    'Work/Study Hours': [10, 12, 8, 14],
-    'Financial Stress': [6.0, 5.0, 7.0, 8.0],
-    'Dietary Habits_Healthy': [1, 0, 1, 1],
-    'Dietary Habits_Unhealthy': [0, 1, 0, 0],
-    'Have you ever had suicidal thoughts ?_No': [1, 1, 0, 1],
-    'Have you ever had suicidal thoughts ?_Yes': [0, 0, 1, 0]
-})
-
-Y_dummy = [0, 1, 0, 1]  # Dummy target for training (adjust based on actual target)
-
-GBR.fit(X_dummy, Y_dummy)
-
-# Make prediction based on the user input
-prediction = GBR.predict(df)
-prediction_proba = GBR.predict_proba(df)
-
-st.subheader('Prediction')
-st.write(f"Predicted Class: {prediction[0]}")  # Output the predicted class
-
-st.subheader('Prediction Probability')
-st.write(f"Prediction Probability: {prediction_proba[0]}")  # Display probabilities for each class
+if st.button("Predict Depression Likelihood"):
+    prediction = model.predict([input_features])[0]
+    st.subheader('Prediction')
+    st.success(f"Predicted Depression Likelihood: {prediction:.2f}")
