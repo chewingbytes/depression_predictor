@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import joblib
 
-model = joblib.load("trained_model.pk1")
+model = joblib.load("the_train.pk1")
 
 st.write("""
 Are you depressed?
