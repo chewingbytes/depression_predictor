@@ -3,7 +3,7 @@ import pandas as pd
 import joblib
 import pickle
 
-model = pickle.load(open('the_train.pk1', 'rb'))
+model = joblib.load("the_train.pk1")
 
 st.write("""
 Are you depressed?
