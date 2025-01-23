@@ -55,6 +55,6 @@ if st.button("Predict Depression Likelihood"):
     try:
         prediction = model.predict([input_features])[0]
         st.subheader('Prediction')
-        st.success(f"Predicted Depression Likelihood: {prediction:.2f}")
+        st.success(f"Predicted Depression Likelihood: {prediction:.2f}/1")
     except Exception as e:
         st.error(f"An error occurred during prediction: {str(e)}")
