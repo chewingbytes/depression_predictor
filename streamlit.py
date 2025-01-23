@@ -22,7 +22,6 @@ def user_input_features():
     suicidal_thoughts_no = st.sidebar.selectbox('Have you ever had suicidal thoughts? - No', [0, 1], index=1)
     suicidal_thoughts_yes = st.sidebar.selectbox('Have you ever had suicidal thoughts? - Yes', [0, 1], index=0)
     
-    # Create the data dictionary for display purposes
     data = {
         'Age': age,
         'Academic Pressure': academic_pressure,
